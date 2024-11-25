@@ -7,7 +7,6 @@ exports.getApiEndpoints = (req, res) => {
 
 exports.getAllTopics = (req, res) => {
 	selectTopics().then((topic) => {
-		console.log(topic);
 		res.status(200).send({ topic });
 	});
 };
