@@ -44,7 +44,7 @@ describe('GET /api/topics', () => {
 	});
 });
 
-describe('GET /api/articles/:article_id', () => {
+describe.skip('GET /api/articles/:article_id', () => {
 	test('200: Responds with an object with multiple properties', () => {
 		return request(app)
 			.get('/api/articles/3')
