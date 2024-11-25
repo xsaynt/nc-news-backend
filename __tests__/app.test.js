@@ -44,8 +44,8 @@ describe('GET /api/topics', () => {
 	});
 });
 
-describe.skip('GET /api/articles/:article_id', () => {
-	test('200: Responds with an object with multiple properties', () => {
+describe('GET /api/articles/:article_id', () => {
+	test('200: Responds with an article of the chosen ID', () => {
 		return request(app)
 			.get('/api/articles/3')
 			.expect(200)
@@ -56,10 +56,26 @@ describe.skip('GET /api/articles/:article_id', () => {
 					topic: 'mitch',
 					author: 'icellusedkars',
 					body: 'some gifs',
-					created_at: 1604394720000,
+					created_at: '2020-11-03T09:12:00.000Z',
 					article_img_url:
 						'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
 				});
+			});
+	});
+	test('400: Returns an invalid input message when provided anything but a number', () => {
+		return request(app)
+			.get('/api/articles/tester')
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Invalid input');
+			});
+	});
+	test('400: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
+		return request(app)
+			.get('/api/articles/9999')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('article does not exist');
 			});
 	});
 });
