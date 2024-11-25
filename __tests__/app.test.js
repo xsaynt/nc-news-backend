@@ -32,10 +32,25 @@ describe('GET /api/topics', () => {
 		return request(app)
 			.get('/api/topics')
 			.expect(200)
-			.then(({ body: { topics } }) => {
-				expect(topics).toMatchObject([
-					{ slug: expect.any(String), description: expect.any(String) },
-				]);
+			.then(({ body: { topic } }) => {
+				topic.forEach((topics) => {
+					const keys = Object.keys(topics);
+					expect(keys.length).toBe(2);
+
+					expect(topics).toHaveProperty('slug', expect.any(String));
+					expect(topics).toHaveProperty('description', expect.any(String));
+				});
 			});
 	});
 });
+
+// describe('GET /api/articles/:article_id', () => {
+// 	test('200: Responds with an object with multiple properties', () => {
+// 		return request(app)
+// 			.get('/api/articles/3')
+// 			.expect()
+// 			.then(({ body }) => {
+// 				expect(body.article_id).tobe(1);
+// 			});
+// 	});
+// });

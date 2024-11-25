@@ -1,4 +1,4 @@
-const {} = require('./app.model');
+const { selectTopics } = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
 exports.getApiEndpoints = (req, res) => {
@@ -6,7 +6,8 @@ exports.getApiEndpoints = (req, res) => {
 };
 
 exports.getAllTopics = (req, res) => {
-	const topics = endpointsJson['GET /api/topics'].exampleResponse.topics;
-
-	res.status(200).send({ topics });
+	selectTopics().then((topic) => {
+		console.log(topic);
+		res.status(200).send({ topic });
+	});
 };

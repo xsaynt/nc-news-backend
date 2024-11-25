@@ -5,9 +5,11 @@
 	"GET /api/topics": {
 		"description": "serves an array of all topics",
 		"queries": [],
-		"exampleResponse": {
-			"topics": [{ "slug": "football", "description": "Footie!" }]
-		}
+		"exampleResponse": [
+			{ "slug": "mitch", "description": "The man, the Mitch, the legend" },
+			{ "slug": "cats", "description": "Not dogs" },
+			{ "slug": "paper", "description": "what books are made of" }
+		]
 	},
 	"GET /api/articles": {
 		"description": "serves an array of all articles",
