@@ -1,14 +1,16 @@
-const { selectTopics, articleId } = require('./app.model');
+const { selectTopics, articleId, articlesDescending } = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
 exports.getApiEndpoints = (req, res, next) => {
 	res.status(200).send({ endpoints: endpointsJson });
 };
 
-exports.getAllTopics = (req, res) => {
-	selectTopics().then((topic) => {
-		res.status(200).send({ topic });
-	});
+exports.getAllTopics = (req, res, next) => {
+	selectTopics()
+		.then((topic) => {
+			res.status(200).send({ topic });
+		})
+		.catch(next);
 };
 
 exports.getArticlebyId = (req, res, next) => {
@@ -24,4 +26,12 @@ exports.getArticlebyId = (req, res, next) => {
 				next(err);
 			}
 		});
+};
+
+exports.sortedArticles = (req, res, next) => {
+	articlesDescending()
+		.then((articles) => {
+			res.status(200).send({ articles });
+		})
+		.catch(next);
 };

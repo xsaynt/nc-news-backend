@@ -70,7 +70,7 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('Invalid input');
 			});
 	});
-	test('400: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
+	test('404: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
 		return request(app)
 			.get('/api/articles/9999')
 			.expect(404)
@@ -78,4 +78,27 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('article does not exist');
 			});
 	});
+});
+
+describe('GET /api/articles', () => {
+	test('200: Returns an array of all articles sorted in descending order without a body property', () => {
+		return request(app)
+			.get('/api/articles')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toHaveLength(13);
+				articles.forEach((article) => {
+					expect(article).toHaveProperty('article_id', expect.any(Number));
+					expect(article).toHaveProperty('title', expect.any(String));
+					expect(article).toHaveProperty('topic', expect.any(String));
+					expect(article).toHaveProperty('author', expect.any(String));
+					expect(article).toHaveProperty('created_at', expect.any(String));
+					expect(article).toHaveProperty('votes', expect.any(Number));
+					expect(article).toHaveProperty('comment_count', expect.any(Number));
+					expect(article).toHaveProperty('article_img_url', expect.any(String));
+				});
+				expect(articles).toBeSortedBy('created_at', { descending: true });
+			});
+	});
+	test('');
 });
