@@ -4,6 +4,7 @@ const {
 	getApiEndpoints,
 	getAllTopics,
 	getArticlebyId,
+	sortedArticles,
 } = require('../app.controller');
 const {
 	postgresErrorHandler,
@@ -18,6 +19,8 @@ app.get('/api', getApiEndpoints);
 app.get('/api/topics', getAllTopics);
 
 app.get('/api/articles/:article_id', getArticlebyId);
+
+app.get('/api/articles', sortedArticles);
 
 app.all('/*', (req, res) => {
 	res.status(404).send({ msg: 'Route Not Found' });
