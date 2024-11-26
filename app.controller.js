@@ -1,8 +1,9 @@
 const {
 	selectTopics,
 	articleId,
-	articlesDescending,
+	fetchArticles,
 	articleComments,
+	newArticleComment,
 } = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
@@ -33,8 +34,8 @@ exports.getArticlebyId = (req, res, next) => {
 		});
 };
 
-exports.sortedArticles = (req, res, next) => {
-	articlesDescending()
+exports.getArticles = (req, res, next) => {
+	fetchArticles()
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
@@ -46,6 +47,28 @@ exports.getMatchingComments = (req, res, next) => {
 	articleComments(article_id)
 		.then((article) => {
 			res.status(200).send(article);
+		})
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
+};
+
+exports.postNewComment = (req, res, next) => {
+	const { article_id } = req.params;
+	const { username, body } = req.body;
+
+	if (!username || !body) {
+		return res.status(400).send({ msg: `bad request` });
+	}
+	newArticleComment(article_id, { username, body })
+		.then((newComment) => {
+			res
+				.status(201)
+				.send({ username: newComment.author, body: newComment.body });
 		})
 		.catch((err) => {
 			if (err.status) {

@@ -4,8 +4,9 @@ const {
 	getApiEndpoints,
 	getAllTopics,
 	getArticlebyId,
-	sortedArticles,
+	getArticles,
 	getMatchingComments,
+	postNewComment,
 } = require('../app.controller');
 const {
 	postgresErrorHandler,
@@ -21,9 +22,11 @@ app.get('/api/topics', getAllTopics);
 
 app.get('/api/articles/:article_id', getArticlebyId);
 
-app.get('/api/articles', sortedArticles);
+app.get('/api/articles', getArticles);
 
 app.get('/api/articles/:article_id/comments', getMatchingComments);
+
+app.post('/api/articles/:article_id/comments', postNewComment);
 
 app.all('/*', (req, res) => {
 	res.status(404).send({ msg: 'Route Not Found' });

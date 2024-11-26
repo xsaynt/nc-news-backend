@@ -1,6 +1,8 @@
 exports.postgresErrorHandler = (err, req, res, next) => {
 	if (err.code === '22P02') {
 		res.status(400).send({ msg: 'Invalid input' });
+	} else if (err.code === '23503') {
+		res.status(404).send({ msg: 'Non-existant input' });
 	} else {
 		next(err);
 	}

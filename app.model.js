@@ -17,7 +17,7 @@ exports.articleId = (article_id) => {
 		});
 };
 
-exports.articlesDescending = () => {
+exports.fetchArticles = () => {
 	return db
 		.query(
 			`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, COALESCE(COUNT(comments.comment_id),0) AS comment_count, articles.article_img_url FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY created_at DESC;`
@@ -41,5 +41,20 @@ exports.articleComments = (article_id) => {
 				return Promise.reject({ status: 404, msg: 'article does not exist' });
 			}
 			return rows;
+		});
+};
+
+exports.newArticleComment = (article_id, comment_data) => {
+	const { username, body } = comment_data;
+
+	return db
+		.query(
+			`INSERT INTO comments (article_id, author, body)
+					VALUES ($1, $2, $3)
+					RETURNING *;`,
+			[article_id, username, body]
+		)
+		.then(({ rows }) => {
+			return rows[0];
 		});
 };

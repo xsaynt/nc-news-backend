@@ -139,3 +139,51 @@ describe('GET /api/articles/:article_id/comments', () => {
 			});
 	});
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+	test('201: adds a comment for the specified article id with username and body properties', () => {
+		const commentData = {
+			username: 'butter_bridge',
+			body: 'this is a test comment for an article',
+		};
+
+		return request(app)
+			.post('/api/articles/2/comments')
+			.send(commentData)
+			.expect(201)
+			.then(({ body }) => {
+				expect(body).toHaveProperty('username', 'butter_bridge');
+				expect(body).toHaveProperty(
+					'body',
+					'this is a test comment for an article'
+				);
+			});
+	});
+	test('400: returns a bad request message when either the username or body are missing', () => {
+		const commentData = {
+			body: 'this is a test comment for an article',
+		};
+
+		return request(app)
+			.post('/api/articles/2/comments')
+			.send(commentData)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe(`bad request`);
+			});
+	});
+	test('404: Returns a message advising the input does not currently exist when the input ID does not exist', () => {
+		const commentData = {
+			username: 'butter_bridge',
+			body: 'this is a test comment for an article',
+		};
+
+		return request(app)
+			.post('/api/articles/9999/comments')
+			.send(commentData)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Non-existant input');
+			});
+	});
+});
