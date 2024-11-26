@@ -1,4 +1,9 @@
-const { selectTopics, articleId, articlesDescending } = require('./app.model');
+const {
+	selectTopics,
+	articleId,
+	articlesDescending,
+	articleComments,
+} = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
 exports.getApiEndpoints = (req, res, next) => {
@@ -34,4 +39,19 @@ exports.sortedArticles = (req, res, next) => {
 			res.status(200).send({ articles });
 		})
 		.catch(next);
+};
+
+exports.getMatchingComments = (req, res, next) => {
+	const article_id = req.params.article_id;
+	articleComments(article_id)
+		.then((article) => {
+			res.status(200).send(article);
+		})
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
 };
