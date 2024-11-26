@@ -43,3 +43,18 @@ exports.articleComments = (article_id) => {
 			return rows;
 		});
 };
+
+exports.newArticleComment = (article_id, comment_data) => {
+	const { username, body } = comment_data;
+
+	return db
+		.query(
+			`INSERT INTO comments (article_id, author, body)
+					VALUES ($1, $2, $3)
+					RETURNING *;`,
+			[article_id, username, body]
+		)
+		.then(({ rows }) => {
+			return rows[0];
+		});
+};

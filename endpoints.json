@@ -53,5 +53,13 @@
 			"votes": 0,
 			"created_at": "2020-11-03T21:00:00.000Z"
 		}
+	},
+	"POST /api/articles/:article_id/comments": {
+		"description": "serves an object of a new comment based on the article id that matches an article ID",
+		"queries": ["author_id"],
+		"exampleResponse": {
+			"username": "butter_bridge",
+			"body": "this is a test comment for an article"
+		}
 	}
 }
