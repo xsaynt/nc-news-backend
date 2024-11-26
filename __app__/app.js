@@ -4,7 +4,7 @@ const {
 	getApiEndpoints,
 	getAllTopics,
 	getArticlebyId,
-	sortedArticles,
+	getArticles,
 	getMatchingComments,
 	postNewComment,
 } = require('../app.controller');
@@ -22,7 +22,7 @@ app.get('/api/topics', getAllTopics);
 
 app.get('/api/articles/:article_id', getArticlebyId);
 
-app.get('/api/articles', sortedArticles);
+app.get('/api/articles', getArticles);
 
 app.get('/api/articles/:article_id/comments', getMatchingComments);
 

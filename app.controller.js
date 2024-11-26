@@ -1,7 +1,7 @@
 const {
 	selectTopics,
 	articleId,
-	articlesDescending,
+	fetchArticles,
 	articleComments,
 	newArticleComment,
 } = require('./app.model');
@@ -34,8 +34,8 @@ exports.getArticlebyId = (req, res, next) => {
 		});
 };
 
-exports.sortedArticles = (req, res, next) => {
-	articlesDescending()
+exports.getArticles = (req, res, next) => {
+	fetchArticles()
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
