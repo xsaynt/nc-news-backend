@@ -100,5 +100,42 @@ describe('GET /api/articles', () => {
 				expect(articles).toBeSortedBy('created_at', { descending: true });
 			});
 	});
-	test('');
+});
+
+describe('GET /api/articles/:article_id/comments', () => {
+	test('200: Returns an array of comments for a given article_id', () => {
+		return request(app)
+			.get('/api/articles/1/comments')
+			.expect(200)
+			.then(({ body }) => {
+				body.forEach((article) => {
+					const keys = Object.keys(article);
+					expect(keys.length).toBe(6);
+
+					expect(article).toHaveProperty('comment_id', expect.any(Number));
+					expect(article).toHaveProperty('votes', expect.any(Number));
+					expect(article).toHaveProperty('created_at', expect.any(String));
+					expect(article).toHaveProperty('author', expect.any(String));
+					expect(article).toHaveProperty('body', expect.any(String));
+					expect(article).toHaveProperty('article_id', expect.any(Number));
+				});
+				expect(body).toBeSortedBy('created_at', { descending: true });
+			});
+	});
+	test('400: Returns an invalid input message when provided anything but a number', () => {
+		return request(app)
+			.get('/api/articles/tester/comments')
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Invalid input');
+			});
+	});
+	test('404: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
+		return request(app)
+			.get('/api/articles/9999/comments')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('article does not exist');
+			});
+	});
 });
