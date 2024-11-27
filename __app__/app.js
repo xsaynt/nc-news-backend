@@ -8,6 +8,7 @@ const {
 	getMatchingComments,
 	postNewComment,
 	newVoteValue,
+	removedComment,
 } = require('../app.controller');
 const {
 	postgresErrorHandler,
@@ -30,6 +31,8 @@ app.get('/api/articles/:article_id/comments', getMatchingComments);
 app.post('/api/articles/:article_id/comments', postNewComment);
 
 app.patch('/api/articles/:article_id', newVoteValue);
+
+app.delete('/api/comments/:comment_id', removedComment);
 
 app.all('/*', (req, res) => {
 	res.status(404).send({ msg: 'Route Not Found' });
