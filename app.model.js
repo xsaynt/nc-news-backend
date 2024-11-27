@@ -63,7 +63,7 @@ exports.updatedVotes = (updatedVotes, article_id) => {
 	const { inc_votes } = updatedVotes;
 
 	return db
-		.query('SELECT votes FROM articles WHERE article_id = $1', [article_id])
+		.query(`SELECT votes FROM articles WHERE article_id = $1`, [article_id])
 		.then(({ rows }) => {
 			if (rows.length === 0) {
 				return Promise.reject({
@@ -95,8 +95,14 @@ exports.updatedVotes = (updatedVotes, article_id) => {
 
 exports.deleteComment = (comment_id) => {
 	return db
-		.query('DELETE FROM comments WHERE comment_id = $1;', [comment_id])
+		.query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
 		.then(({ rowCount }) => {
 			return rowCount;
 		});
+};
+
+exports.allUsers = () => {
+	return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+		return rows;
+	});
 };

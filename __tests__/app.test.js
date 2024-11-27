@@ -261,3 +261,21 @@ describe('DELETE /api/comments/:comment_id', () => {
 			});
 	});
 });
+
+describe('GET /api/users', () => {
+	test('200: Returns the entire user table with all contents', () => {
+		return request(app)
+			.get('/api/users')
+			.expect(200)
+			.then(({ body }) => {
+				body.forEach((user) => {
+					const keys = Object.keys(user);
+					expect(keys).toHaveLength(3);
+
+					expect(user).toHaveProperty('username');
+					expect(user).toHaveProperty('name');
+					expect(user).toHaveProperty('avatar_url');
+				});
+			});
+	});
+});
