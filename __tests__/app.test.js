@@ -243,4 +243,21 @@ describe('POST /api/articles/:article_id', () => {
 	});
 });
 
-describe('DELETE /api/comments/:comment_id', () => {});
+describe('DELETE /api/comments/:comment_id', () => {
+	test('204: Comment is deleted based on the input comment_id', () => {
+		return request(app)
+			.delete('/api/comments/1')
+			.expect(204)
+			.then(({ body }) => {
+				expect(body).toEqual({});
+			});
+	});
+	test('404: Returns a message advising no comment found if the comment_id does not exist', () => {
+		return request(app)
+			.delete('/api/comments/9999')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toEqual({ msg: 'Comment not found' });
+			});
+	});
+});
