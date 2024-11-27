@@ -242,3 +242,5 @@ describe('POST /api/articles/:article_id', () => {
 			});
 	});
 });
+
+describe('DELETE /api/comments/:comment_id', () => {});
