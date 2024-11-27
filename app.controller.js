@@ -4,6 +4,7 @@ const {
 	fetchArticles,
 	articleComments,
 	newArticleComment,
+	updatedVotes,
 } = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
@@ -69,6 +70,27 @@ exports.postNewComment = (req, res, next) => {
 			res
 				.status(201)
 				.send({ username: newComment.author, body: newComment.body });
+		})
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
+};
+
+exports.newVoteValue = (req, res, next) => {
+	const { article_id } = req.params;
+	const { inc_votes } = req.body;
+
+	if (!article_id || !inc_votes) {
+		return res.status(400).send({ msg: `bad request` });
+	}
+	updatedVotes({ inc_votes }, article_id)
+		.then((newVotes) => {
+			console.log(newVotes);
+			res.status(200).send(newVotes);
 		})
 		.catch((err) => {
 			if (err.status) {

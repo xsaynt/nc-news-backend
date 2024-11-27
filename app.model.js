@@ -58,3 +58,37 @@ exports.newArticleComment = (article_id, comment_data) => {
 			return rows[0];
 		});
 };
+
+exports.updatedVotes = (updatedVotes, article_id) => {
+	const { inc_votes } = updatedVotes;
+
+	return db
+		.query('SELECT votes FROM articles WHERE article_id = $1', [article_id])
+		.then(({ rows }) => {
+			if (rows.length === 0) {
+				return Promise.reject({
+					status: 404,
+					msg: 'Bad request: Article does not exist',
+				});
+			}
+			const currentVotes = rows[0].votes;
+			if (currentVotes + inc_votes < 0) {
+				return Promise.reject({
+					status: 400,
+					msg: 'Bad request: Not enough votes to deduct',
+				});
+			}
+
+			return db
+				.query(
+					`UPDATE articles
+							 SET votes = votes + $1
+							 WHERE article_id = $2
+							 RETURNING *;`,
+					[inc_votes, article_id]
+				)
+				.then(({ rows }) => {
+					return rows[0];
+				});
+		});
+};
