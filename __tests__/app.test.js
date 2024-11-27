@@ -4,9 +4,6 @@ const db = require('../db/seeds/seed');
 const app = require('../__app__/app');
 const data = require('../db/data/test-data');
 const dbConnection = require('../db/connection');
-/* Set up your test imports here */
-
-/* Set up your beforeEach & afterAll functions here */
 
 afterAll(() => {
 	return dbConnection.end();
@@ -184,6 +181,64 @@ describe('POST /api/articles/:article_id/comments', () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe('Non-existant input');
+			});
+	});
+});
+
+describe('POST /api/articles/:article_id', () => {
+	test('200: Responds with an article that has an updated votes value when a positive number of votes is sent', () => {
+		const updatedVotes = { inc_votes: 10 };
+
+		return request(app)
+			.patch('/api/articles/1')
+			.send(updatedVotes)
+			.expect(200)
+			.then(({ body }) => {
+				expect(body).toHaveProperty('votes', 110);
+			});
+	});
+	test('200: Responds with an article that has an updated votes value when a negative number of votes is sent', () => {
+		const updatedVotes = { inc_votes: -10 };
+
+		return request(app)
+			.patch('/api/articles/1')
+			.send(updatedVotes)
+			.expect(200)
+			.then(({ body }) => {
+				expect(body).toHaveProperty('votes', 90);
+			});
+	});
+	test('404: Response with an error message if the article does not exist', () => {
+		const updatedVotes = { inc_votes: -10 };
+
+		return request(app)
+			.patch('/api/articles/9999')
+			.send(updatedVotes)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request: Article does not exist');
+			});
+	});
+	test('400: Responds with an error message if trying to deduct more votes than the rows value', () => {
+		const updatedVotes = { inc_votes: -1000 };
+
+		return request(app)
+			.patch('/api/articles/1')
+			.send(updatedVotes)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request: Not enough votes to deduct');
+			});
+	});
+	test('400: Responds with an error message when attempting to input anything but a number as an article reference', () => {
+		const updatedVotes = { inc_votes: 10 };
+
+		return request(app)
+			.patch('/api/articles/tester')
+			.send(updatedVotes)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Invalid input');
 			});
 	});
 });
