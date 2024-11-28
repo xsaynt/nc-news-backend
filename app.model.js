@@ -17,10 +17,29 @@ exports.articleId = (article_id) => {
 		});
 };
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (sort_by, order) => {
+	const validColumns = ['title', 'topic', 'author', 'created_at', 'votes'];
+	const validOrder = ['asc', 'desc'];
+
+	let sortBy;
+	if (validColumns.includes(sort_by)) {
+		sortBy = sort_by;
+	}
+
+	let sortOrder;
+	if (validOrder.includes(order)) {
+		sortOrder = order;
+	}
+
 	return db
 		.query(
-			`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, COALESCE(COUNT(comments.comment_id),0) AS comment_count, articles.article_img_url FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY created_at DESC;`
+			`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, COALESCE(COUNT(comments.comment_id),0) 
+			AS comment_count, articles.article_img_url 
+			FROM articles 
+			LEFT JOIN comments 
+			ON articles.article_id = comments.article_id 
+			GROUP BY articles.article_id 
+			ORDER BY ${sortBy} ${sortOrder};`
 		)
 		.then(({ rows }) => {
 			rows.forEach((article) => {

@@ -6,6 +6,7 @@ const {
 	newArticleComment,
 	updatedVotes,
 	deleteComment,
+	allUsers,
 } = require('./app.model');
 const endpointsJson = require('./endpoints.json');
 
@@ -23,6 +24,7 @@ exports.getAllTopics = (req, res, next) => {
 
 exports.getArticlebyId = (req, res, next) => {
 	const article_id = req.params.article_id;
+
 	articleId(article_id)
 		.then((article) => {
 			res.status(200).send({ article });
@@ -37,11 +39,19 @@ exports.getArticlebyId = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-	fetchArticles()
+	const { sort_by = 'created_at', order = 'desc' } = req.query;
+
+	fetchArticles(sort_by, order)
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
-		.catch(next);
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
 };
 
 exports.getMatchingComments = (req, res, next) => {
@@ -111,6 +121,20 @@ exports.removedComment = (req, res, next) => {
 				return res.status(404).send({ msg: 'Comment not found' });
 			}
 			return res.status(204).send();
+		})
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
+};
+
+exports.getAllUsers = (req, res, next) => {
+	allUsers()
+		.then((allUsers) => {
+			res.status(200).send(allUsers);
 		})
 		.catch((err) => {
 			if (err.status) {

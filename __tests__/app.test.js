@@ -64,7 +64,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/tester')
 			.expect(400)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Invalid input');
+				expect(body.msg).toBe('bad request');
 			});
 	});
 	test('404: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
@@ -97,6 +97,30 @@ describe('GET /api/articles', () => {
 				expect(articles).toBeSortedBy('created_at', { descending: true });
 			});
 	});
+	test('200: returns all articles sorted by specified parameters', () => {
+		return request(app)
+			.get('/api/articles?sort_by=title&order=asc')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSortedBy('title', { ascending: true });
+			});
+	});
+	test('404: Returns an error message when passed a sort_by value that is invalid', () => {
+		return request(app)
+			.get('/api/articles?sort_by=testing&order=asc')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toEqual({ msg: 'cannot be found' });
+			});
+	});
+	test('404: Returns an error message when passed an order value that is invalid', () => {
+		return request(app)
+			.get('/api/articles?sort_by=title&order=tester')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toEqual({ msg: 'cannot be found' });
+			});
+	});
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -124,7 +148,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 			.get('/api/articles/tester/comments')
 			.expect(400)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Invalid input');
+				expect(body.msg).toBe('bad request');
 			});
 	});
 	test('404: Returns a message advising the article does not exist when passed a number that is not a current article', () => {
@@ -180,7 +204,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 			.send(commentData)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Non-existant input');
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
 });
@@ -238,7 +262,7 @@ describe('POST /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(400)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Invalid input');
+				expect(body.msg).toBe('bad request');
 			});
 	});
 });
