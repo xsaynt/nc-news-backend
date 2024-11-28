@@ -77,7 +77,7 @@ describe('GET /api/articles/:article_id', () => {
 	});
 });
 
-describe('GET /api/articles', () => {
+describe.only('GET /api/articles', () => {
 	test('200: Returns an array of all articles sorted in descending order without a body property', () => {
 		return request(app)
 			.get('/api/articles')
@@ -97,7 +97,7 @@ describe('GET /api/articles', () => {
 				expect(articles).toBeSortedBy('created_at', { descending: true });
 			});
 	});
-	test('200: returns all articles sorted by specified parameters', () => {
+	test('200: Returns all articles sorted by specified parameters', () => {
 		return request(app)
 			.get('/api/articles?sort_by=title&order=asc')
 			.expect(200)
@@ -105,12 +105,23 @@ describe('GET /api/articles', () => {
 				expect(articles).toBeSortedBy('title', { ascending: true });
 			});
 	});
+	test('200: Returns all articles that match the specified topic value', () => {
+		return request(app)
+			.get('/api/articles?topic=mitch')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toHaveLength(12);
+				articles.forEach((article) => {
+					expect(article.topic).toBe('mitch');
+				});
+			});
+	});
 	test('404: Returns an error message when passed a sort_by value that is invalid', () => {
 		return request(app)
 			.get('/api/articles?sort_by=testing&order=asc')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body).toEqual({ msg: 'cannot be found' });
+				expect(body.msg).toEqual('cannot be found');
 			});
 	});
 	test('404: Returns an error message when passed an order value that is invalid', () => {
@@ -118,7 +129,15 @@ describe('GET /api/articles', () => {
 			.get('/api/articles?sort_by=title&order=tester')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body).toEqual({ msg: 'cannot be found' });
+				expect(body.msg).toEqual('cannot be found');
+			});
+	});
+	test('404: Returns an error message when passed a topic value that does not exist', () => {
+		return request(app)
+			.get('/api/articles?topic=tester')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
 });

@@ -17,7 +17,7 @@ exports.articleId = (article_id) => {
 		});
 };
 
-exports.fetchArticles = (sort_by, order) => {
+exports.fetchArticles = (sort_by, order, topic) => {
 	const validColumns = ['title', 'topic', 'author', 'created_at', 'votes'];
 	const validOrder = ['asc', 'desc'];
 
@@ -31,22 +31,37 @@ exports.fetchArticles = (sort_by, order) => {
 		sortOrder = order;
 	}
 
-	return db
-		.query(
-			`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, COALESCE(COUNT(comments.comment_id),0) 
-			AS comment_count, articles.article_img_url 
+	let query = `SELECT articles.article_id, 
+			        articles.title, 
+					articles.topic, 
+					articles.author, 
+					articles.created_at, 
+					articles.votes, 
+					COALESCE(COUNT(comments.comment_id),0) AS comment_count, 
+					articles.article_img_url 
 			FROM articles 
-			LEFT JOIN comments 
-			ON articles.article_id = comments.article_id 
-			GROUP BY articles.article_id 
-			ORDER BY ${sortBy} ${sortOrder};`
-		)
-		.then(({ rows }) => {
-			rows.forEach((article) => {
-				article.comment_count = Number(article.comment_count);
-			});
-			return rows;
+			LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+	let topicParam = [];
+
+	if (topic) {
+		query += ` WHERE articles.topic = $1 `;
+		topicParam.push(topic);
+	}
+	query += ` GROUP BY articles.article_id 
+			ORDER BY ${sortBy} ${sortOrder};`;
+	return db.query(query, topicParam).then(({ rows }) => {
+		rows.forEach((article) => {
+			article.comment_count = Number(article.comment_count);
 		});
+
+		if (rows.length === 0) {
+			const err = new Error('cannot be found');
+			err.status = 404;
+			throw err;
+		}
+		return rows;
+	});
 };
 
 exports.articleComments = (article_id) => {

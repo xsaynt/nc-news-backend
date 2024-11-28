@@ -39,15 +39,15 @@ exports.getArticlebyId = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-	const { sort_by = 'created_at', order = 'desc' } = req.query;
+	const { sort_by = 'created_at', order = 'desc', topic } = req.query;
 
-	fetchArticles(sort_by, order)
+	fetchArticles(sort_by, order, topic)
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
 		.catch((err) => {
 			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
+				res.status(err.status).send({ msg: err.message });
 			} else {
 				next(err);
 			}
