@@ -31,7 +31,7 @@
 	},
 	"GET /api/articles/:article_id": {
 		"description": "serves an object of an article based on the input ID",
-		"queries": ["author_id"],
+		"queries": ["article_id"],
 		"exampleResponse": {
 			"article_id": 3,
 			"title": "Eight pug gifs that remind me of mitch",
@@ -44,7 +44,7 @@
 	},
 	"GET /api/articles/:article_id/comments": {
 		"description": "serves an array of comments based on the article id that matches both comments and articles",
-		"queries": ["author_id"],
+		"queries": ["article_id"],
 		"exampleResponse": {
 			"comment_id": 5,
 			"body": "I hate streaming noses",
@@ -55,8 +55,8 @@
 		}
 	},
 	"POST /api/articles/:article_id/comments": {
-		"description": "serves an object of a new comment based on the article id that matches an article ID",
-		"queries": ["author_id"],
+		"description": "updates the article table with an object of a new comment based on the article id that matches an comment id",
+		"queries": ["article_id"],
 		"exampleResponse": {
 			"username": "butter_bridge",
 			"body": "this is a test comment for an article"
@@ -64,7 +64,7 @@
 	},
 	"POST /api/articles/:article_id": {
 		"description": "serves an object of an updated votes value based on whether a positive or negative number is input",
-		"queries": ["author_id"],
+		"queries": ["article_id"],
 		"exampleResponse": {
 			"article_id": 1,
 			"title": "Living in the shadow of a great man",
@@ -77,9 +77,8 @@
 		}
 	},
 	"DELETE /api/comments/:comment_id": {
-		"description": "serves an empty output once the row specified has been deleted",
-		"queries": ["author_id"],
-		"exampleResponse": {}
+		"description": "deletes a comment from the database table and returns nothing",
+		"queries": ["comment_id"]
 	},
 	"GET /api/users": {
 		"description": "serves the entire users table contents",

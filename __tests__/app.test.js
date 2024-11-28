@@ -97,12 +97,36 @@ describe('GET /api/articles', () => {
 				expect(articles).toBeSortedBy('created_at', { descending: true });
 			});
 	});
-	test('200: Returns all articles sorted by specified parameters', () => {
+	test('200: Returns all articles in descending order sorted by the title', () => {
 		return request(app)
-			.get('/api/articles?sort_by=title&order=asc')
+			.get('/api/articles?sort_by=title&order=desc')
 			.expect(200)
 			.then(({ body: { articles } }) => {
-				expect(articles).toBeSortedBy('title', { ascending: true });
+				expect(articles).toBeSortedBy('title', { descending: true });
+			});
+	});
+	test('200: Returns all articles in ascending order sorted by the author', () => {
+		return request(app)
+			.get('/api/articles?sort_by=author&order=asc')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSortedBy('author', { descending: false });
+			});
+	});
+	test('200: Returns all articles sorted by created_at', () => {
+		return request(app)
+			.get('/api/articles?sort_by=created_at')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSortedBy('created_at', { descending: true });
+			});
+	});
+	test('200: Returns all articles sorted by votes', () => {
+		return request(app)
+			.get('/api/articles?sort_by=votes')
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSortedBy('votes', { descending: true });
 			});
 	});
 	test('200: Returns all articles that match the specified topic value', () => {
@@ -134,7 +158,7 @@ describe('GET /api/articles', () => {
 	});
 	test('404: Returns an error message when passed a topic value that does not exist', () => {
 		return request(app)
-			.get('/api/articles?topic=tester')
+			.get('/api/articles?topic=tester&order=asc')
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe('cannot be found');
@@ -300,7 +324,15 @@ describe('DELETE /api/comments/:comment_id', () => {
 			.delete('/api/comments/9999')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body).toEqual({ msg: 'Comment not found' });
+				expect(body.msg).toEqual('Comment not found');
+			});
+	});
+	test('400: Returns a message advising of an invalid id when the input is not a number', () => {
+		return request(app)
+			.delete('/api/comments/tester')
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toEqual('bad request');
 			});
 	});
 });
@@ -311,10 +343,8 @@ describe('GET /api/users', () => {
 			.get('/api/users')
 			.expect(200)
 			.then(({ body }) => {
+				expect(body).toHaveLength(4);
 				body.forEach((user) => {
-					const keys = Object.keys(user);
-					expect(keys).toHaveLength(3);
-
 					expect(user).toHaveProperty('username');
 					expect(user).toHaveProperty('name');
 					expect(user).toHaveProperty('avatar_url');

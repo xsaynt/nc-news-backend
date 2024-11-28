@@ -58,6 +58,7 @@ exports.fetchArticles = (sort_by, order, topic) => {
 		if (rows.length === 0) {
 			const err = new Error('cannot be found');
 			err.status = 404;
+			err.msg = 'cannot be found';
 			throw err;
 		}
 		return rows;
@@ -137,6 +138,12 @@ exports.deleteComment = (comment_id) => {
 
 exports.allUsers = () => {
 	return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+		if (rows.length === 0) {
+			const err = new Error('cannot be found');
+			err.status = 404;
+			err.msg = 'cannot be found';
+			throw err;
+		}
 		return rows;
 	});
 };

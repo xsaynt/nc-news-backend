@@ -29,13 +29,7 @@ exports.getArticlebyId = (req, res, next) => {
 		.then((article) => {
 			res.status(200).send({ article });
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.getArticles = (req, res, next) => {
@@ -45,13 +39,7 @@ exports.getArticles = (req, res, next) => {
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.message });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.getMatchingComments = (req, res, next) => {
@@ -60,13 +48,7 @@ exports.getMatchingComments = (req, res, next) => {
 		.then((article) => {
 			res.status(200).send(article);
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.postNewComment = (req, res, next) => {
@@ -82,13 +64,7 @@ exports.postNewComment = (req, res, next) => {
 				.status(201)
 				.send({ username: newComment.author, body: newComment.body });
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.newVoteValue = (req, res, next) => {
@@ -103,13 +79,7 @@ exports.newVoteValue = (req, res, next) => {
 			console.log(newVotes);
 			res.status(200).send(newVotes);
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.removedComment = (req, res, next) => {
@@ -122,25 +92,14 @@ exports.removedComment = (req, res, next) => {
 			}
 			return res.status(204).send();
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
 
 exports.getAllUsers = (req, res, next) => {
 	allUsers()
 		.then((allUsers) => {
+			console.log(allUsers);
 			res.status(200).send(allUsers);
 		})
-		.catch((err) => {
-			if (err.status) {
-				res.status(err.status).send({ msg: err.msg });
-			} else {
-				next(err);
-			}
-		});
+		.catch(next);
 };
