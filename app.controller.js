@@ -24,6 +24,7 @@ exports.getAllTopics = (req, res, next) => {
 
 exports.getArticlebyId = (req, res, next) => {
 	const article_id = req.params.article_id;
+
 	articleId(article_id)
 		.then((article) => {
 			res.status(200).send({ article });
@@ -38,11 +39,19 @@ exports.getArticlebyId = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-	fetchArticles()
+	const { sort_by = 'created_at', order = 'desc' } = req.query;
+
+	fetchArticles(sort_by, order)
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
-		.catch(next);
+		.catch((err) => {
+			if (err.status) {
+				res.status(err.status).send({ msg: err.msg });
+			} else {
+				next(err);
+			}
+		});
 };
 
 exports.getMatchingComments = (req, res, next) => {
