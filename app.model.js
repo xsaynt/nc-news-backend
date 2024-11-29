@@ -76,7 +76,7 @@ exports.fetchArticles = (sort_by, order, topic) => {
 	});
 };
 
-exports.articleComments = (article_id) => {
+exports.getArticleComments = (article_id) => {
 	return db
 		.query(
 			`SELECT * FROM comments WHERE comments.article_id = $1 ORDER BY created_at DESC;`,

@@ -29,13 +29,11 @@ describe('GET /api/topics', () => {
 		return request(app)
 			.get('/api/topics')
 			.expect(200)
-			.then(({ body: { topic } }) => {
-				topic.forEach((topics) => {
-					const keys = Object.keys(topics);
-					expect(keys.length).toBe(2);
-
-					expect(topics).toHaveProperty('slug', expect.any(String));
-					expect(topics).toHaveProperty('description', expect.any(String));
+			.then(({ body: { topics } }) => {
+				expect(topics).toHaveLength(3);
+				topics.forEach((topic) => {
+					expect(topic).toHaveProperty('slug', expect.any(String));
+					expect(topic).toHaveProperty('description', expect.any(String));
 				});
 			});
 	});
@@ -64,7 +62,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/1')
 			.expect(200)
 			.then(({ body: { article } }) => {
-				expect(article).toHaveProperty('comment_count', expect.any(Number));
+				expect(article).toHaveProperty('comment_count', 11);
 			});
 	});
 	test('400: Returns an invalid input message when provided anything but a number', () => {

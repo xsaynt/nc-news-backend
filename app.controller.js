@@ -2,7 +2,7 @@ const {
 	selectTopics,
 	articleId,
 	fetchArticles,
-	articleComments,
+	getArticleComments,
 	newArticleComment,
 	updatedVotes,
 	deleteComment,
@@ -16,8 +16,8 @@ exports.getApiEndpoints = (req, res, next) => {
 
 exports.getAllTopics = (req, res, next) => {
 	selectTopics()
-		.then((topic) => {
-			res.status(200).send({ topic });
+		.then((topics) => {
+			res.status(200).send({ topics });
 		})
 		.catch(next);
 };
@@ -44,7 +44,8 @@ exports.getArticles = (req, res, next) => {
 
 exports.getMatchingComments = (req, res, next) => {
 	const article_id = req.params.article_id;
-	articleComments(article_id)
+
+	getArticleComments(article_id)
 		.then((article) => {
 			res.status(200).send(article);
 		})
