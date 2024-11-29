@@ -80,7 +80,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/9999')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 });
@@ -153,7 +153,7 @@ describe('GET /api/articles', () => {
 			.get('/api/articles?sort_by=testing&order=asc')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toEqual('cannot be found');
+				expect(body.msg).toEqual('not found');
 			});
 	});
 	test('404: Returns an error message when passed an order value that is invalid', () => {
@@ -161,7 +161,7 @@ describe('GET /api/articles', () => {
 			.get('/api/articles?sort_by=title&order=tester')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toEqual('cannot be found');
+				expect(body.msg).toEqual('not found');
 			});
 	});
 	test('404: Returns an error message when passed a topic value that does not exist', () => {
@@ -169,7 +169,7 @@ describe('GET /api/articles', () => {
 			.get('/api/articles?topic=tester&order=asc')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 });
@@ -207,7 +207,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 			.get('/api/articles/9999/comments')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('article does not exist');
+				expect(body.msg).toBe('not found');
 			});
 	});
 });
@@ -229,11 +229,25 @@ describe('POST /api/articles/:article_id/comments', () => {
 					'body',
 					'this is a test comment for an article'
 				);
+				expect(body).toHaveProperty('comment_id', expect.any(Number));
 			});
 	});
-	test('400: returns a bad request message when either the username or body are missing', () => {
+	test('400: returns a bad request message when the username is missing', () => {
 		const commentData = {
 			body: 'this is a test comment for an article',
+		};
+
+		return request(app)
+			.post('/api/articles/2/comments')
+			.send(commentData)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe(`bad request`);
+			});
+	});
+	test('400: returns a bad request message when the body is missing', () => {
+		const commentData = {
+			username: 'butter_bridge',
 		};
 
 		return request(app)
@@ -255,7 +269,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 			.send(commentData)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 });
@@ -291,7 +305,7 @@ describe('PATCH /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 	test('404: Responds with an error message if trying to deduct more votes than the rows value', () => {
@@ -302,7 +316,7 @@ describe('PATCH /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 	test('404: Responds with an error message if the object fo votes does not have the correct property', () => {
@@ -313,7 +327,7 @@ describe('PATCH /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 	test('404: Responds with an error message if the object fo votes does not have the correct property', () => {
@@ -324,7 +338,7 @@ describe('PATCH /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('cannot be found');
+				expect(body.msg).toBe('not found');
 			});
 	});
 	test('400: Responds with an error message when attempting to input anything but a number as an article reference', () => {
@@ -365,7 +379,7 @@ describe('DELETE /api/comments/:comment_id', () => {
 			.delete('/api/comments/9999')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toEqual('Comment not found');
+				expect(body.msg).toEqual('not found');
 			});
 	});
 	test('400: Returns a message advising of an invalid id when the input is not a number', () => {

@@ -55,14 +55,13 @@ exports.postNewComment = (req, res, next) => {
 	const { article_id } = req.params;
 	const { username, body } = req.body;
 
-	if (!username || !body) {
-		return res.status(400).send({ msg: `bad request` });
-	}
 	newArticleComment(article_id, { username, body })
 		.then((newComment) => {
-			res
-				.status(201)
-				.send({ username: newComment.author, body: newComment.body });
+			res.status(201).send({
+				comment_id: newComment.comment_id,
+				username: newComment.author,
+				body: newComment.body,
+			});
 		})
 		.catch(next);
 };
@@ -84,7 +83,7 @@ exports.removedComment = (req, res, next) => {
 	deleteComment(comment_id)
 		.then((removedRow) => {
 			if (removedRow === 0) {
-				return res.status(404).send({ msg: 'Comment not found' });
+				return res.status(404).send({ msg: 'not found' });
 			}
 			return res.status(204).send();
 		})

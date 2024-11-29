@@ -19,7 +19,7 @@ exports.articleId = (article_id) => {
 		)
 		.then(({ rows }) => {
 			if (rows.length === 0) {
-				return Promise.reject({ status: 404, msg: 'cannot be found' });
+				return Promise.reject({ status: 404, msg: 'not found' });
 			}
 			rows.forEach((article) => {
 				article.comment_count = Number(article.comment_count);
@@ -67,9 +67,9 @@ exports.fetchArticles = (sort_by, order, topic) => {
 		});
 
 		if (rows.length === 0) {
-			const err = new Error('cannot be found');
+			const err = new Error('not found');
 			err.status = 404;
-			err.msg = 'cannot be found';
+			err.msg = 'not found';
 			throw err;
 		}
 		return rows;
@@ -84,7 +84,7 @@ exports.articleComments = (article_id) => {
 		)
 		.then(({ rows }) => {
 			if (rows.length === 0) {
-				return Promise.reject({ status: 404, msg: 'article does not exist' });
+				return Promise.reject({ status: 404, msg: 'not found' });
 			}
 			return rows;
 		});
@@ -92,6 +92,13 @@ exports.articleComments = (article_id) => {
 
 exports.newArticleComment = (article_id, comment_data) => {
 	const { username, body } = comment_data;
+
+	if (!username || !body) {
+		return Promise.reject({
+			status: 400,
+			msg: 'bad request',
+		});
+	}
 
 	return db
 		.query(
@@ -121,7 +128,7 @@ exports.updatedVotes = (updatedVotes, article_id) => {
 			if (rows.length === 0) {
 				return Promise.reject({
 					status: 404,
-					msg: 'cannot be found',
+					msg: 'not found',
 				});
 			}
 			return rows[0];
@@ -139,9 +146,9 @@ exports.deleteComment = (comment_id) => {
 exports.allUsers = () => {
 	return db.query(`SELECT * FROM users;`).then(({ rows }) => {
 		if (rows.length === 0) {
-			const err = new Error('cannot be found');
+			const err = new Error('not found');
 			err.status = 404;
-			err.msg = 'cannot be found';
+			err.msg = 'not found';
 			throw err;
 		}
 		return rows;

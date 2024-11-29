@@ -6,7 +6,7 @@ exports.postgresErrorHandler = (err, req, res, next) => {
 		err.code === '42703' ||
 		err.code === '42601'
 	) {
-		res.status(404).send({ msg: 'cannot be found' });
+		res.status(404).send({ msg: 'not found' });
 	} else {
 		next(err);
 	}
