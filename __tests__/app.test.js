@@ -41,7 +41,7 @@ describe('GET /api/topics', () => {
 	});
 });
 
-describe('GET /api/articles/:article_id', () => {
+describe.only('GET /api/articles/:article_id', () => {
 	test('200: Responds with an article of the chosen ID', () => {
 		return request(app)
 			.get('/api/articles/3')
@@ -59,6 +59,14 @@ describe('GET /api/articles/:article_id', () => {
 				});
 			});
 	});
+	test('200: Returns an article with an additional row of the amount of comments the specified article has', () => {
+		return request(app)
+			.get('/api/articles/1')
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article).toHaveProperty('comment_count', expect.any(Number));
+			});
+	});
 	test('400: Returns an invalid input message when provided anything but a number', () => {
 		return request(app)
 			.get('/api/articles/tester')
@@ -72,7 +80,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/9999')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('article does not exist');
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
 });
