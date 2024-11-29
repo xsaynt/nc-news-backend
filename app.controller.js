@@ -71,12 +71,8 @@ exports.newVoteValue = (req, res, next) => {
 	const { article_id } = req.params;
 	const { inc_votes } = req.body;
 
-	if (!article_id || !inc_votes) {
-		return res.status(400).send({ msg: `bad request` });
-	}
 	updatedVotes({ inc_votes }, article_id)
 		.then((newVotes) => {
-			console.log(newVotes);
 			res.status(200).send(newVotes);
 		})
 		.catch(next);
@@ -98,7 +94,6 @@ exports.removedComment = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
 	allUsers()
 		.then((allUsers) => {
-			console.log(allUsers);
 			res.status(200).send(allUsers);
 		})
 		.catch(next);

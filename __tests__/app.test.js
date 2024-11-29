@@ -59,6 +59,14 @@ describe('GET /api/articles/:article_id', () => {
 				});
 			});
 	});
+	test('200: Returns an article with an additional row of the amount of comments the specified article has', () => {
+		return request(app)
+			.get('/api/articles/1')
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article).toHaveProperty('comment_count', expect.any(Number));
+			});
+	});
 	test('400: Returns an invalid input message when provided anything but a number', () => {
 		return request(app)
 			.get('/api/articles/tester')
@@ -72,7 +80,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/9999')
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('article does not exist');
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
 });
@@ -252,7 +260,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 	});
 });
 
-describe('POST /api/articles/:article_id', () => {
+describe('PATCH /api/articles/:article_id', () => {
 	test('200: Responds with an article that has an updated votes value when a positive number of votes is sent', () => {
 		const updatedVotes = { inc_votes: 10 };
 
@@ -283,18 +291,40 @@ describe('POST /api/articles/:article_id', () => {
 			.send(updatedVotes)
 			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Bad request: Article does not exist');
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
-	test('400: Responds with an error message if trying to deduct more votes than the rows value', () => {
+	test('404: Responds with an error message if trying to deduct more votes than the rows value', () => {
 		const updatedVotes = { inc_votes: -1000 };
 
 		return request(app)
 			.patch('/api/articles/1')
 			.send(updatedVotes)
-			.expect(400)
+			.expect(404)
 			.then(({ body }) => {
-				expect(body.msg).toBe('Bad request: Not enough votes to deduct');
+				expect(body.msg).toBe('cannot be found');
+			});
+	});
+	test('404: Responds with an error message if the object fo votes does not have the correct property', () => {
+		const updatedVotes = { bad_property: 10 };
+
+		return request(app)
+			.patch('/api/articles/1')
+			.send(updatedVotes)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('cannot be found');
+			});
+	});
+	test('404: Responds with an error message if the object fo votes does not have the correct property', () => {
+		const updatedVotes = { bad_property: 10 };
+
+		return request(app)
+			.patch('/api/articles/1')
+			.send(updatedVotes)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('cannot be found');
 			});
 	});
 	test('400: Responds with an error message when attempting to input anything but a number as an article reference', () => {
@@ -302,6 +332,17 @@ describe('POST /api/articles/:article_id', () => {
 
 		return request(app)
 			.patch('/api/articles/tester')
+			.send(updatedVotes)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('bad request');
+			});
+	});
+	test('400: Responds with an error message when attempting to input anything but a number as the updated votes value', () => {
+		const updatedVotes = { inc_votes: 'tested' };
+
+		return request(app)
+			.patch('/api/articles/1')
 			.send(updatedVotes)
 			.expect(400)
 			.then(({ body }) => {
