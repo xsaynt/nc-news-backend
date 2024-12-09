@@ -10,7 +10,7 @@ if (ENV === 'production') {
 }
 
 require('dotenv').config({
-	path: `${__dirname}/../.env.${ENV}`,
+	path: pathToEnvFile,
 });
 
 if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
