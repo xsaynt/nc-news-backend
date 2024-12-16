@@ -16,8 +16,9 @@ const {
 	customErrorHandler,
 	serverErrorHandler,
 } = require('../error');
+const cors = require('cors');
 
-app.use(express.json());
+app.use(express.json(), cors());
 
 app.get('/api', getApiEndpoints);
 
