@@ -104,13 +104,12 @@ exports.newArticleComment = (article_id, comment_data) => {
 		.query('SELECT * FROM users WHERE username = $1', [username])
 		.then(({ rows }) => {
 			if (rows.length === 0) {
-				// If the username does not exist, insert it into the users table
 				return db.query(
 					'INSERT INTO users (username) VALUES ($1) RETURNING *',
 					[username]
 				);
 			}
-			return rows[0]; // If username exists, proceed with comment insertion
+			return rows[0];
 		})
 		.then(() => {
 			return db.query(
