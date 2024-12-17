@@ -101,12 +101,25 @@ exports.newArticleComment = (article_id, comment_data) => {
 	}
 
 	return db
-		.query(
-			`INSERT INTO comments (article_id, author, body)
-					VALUES ($1, $2, $3)
-					RETURNING *;`,
-			[article_id, username, body]
-		)
+		.query('SELECT * FROM users WHERE username = $1', [username])
+		.then(({ rows }) => {
+			if (rows.length === 0) {
+				// If the username does not exist, insert it into the users table
+				return db.query(
+					'INSERT INTO users (username) VALUES ($1) RETURNING *',
+					[username]
+				);
+			}
+			return rows[0]; // If username exists, proceed with comment insertion
+		})
+		.then(() => {
+			return db.query(
+				`INSERT INTO comments (article_id, author, body)
+			  VALUES ($1, $2, $3)
+			  RETURNING *;`,
+				[article_id, username, body]
+			);
+		})
 		.then(({ rows }) => {
 			return rows[0];
 		});
