@@ -135,9 +135,12 @@ exports.updatedVotes = (updatedVotes, article_id) => {
 		});
 };
 
-exports.deleteComment = (comment_id) => {
+exports.deleteComment = (article_id, comment_id) => {
 	return db
-		.query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
+		.query(`DELETE FROM comments WHERE comment_id = $1 AND article_id = $2;`, [
+			comment_id,
+			article_id,
+		])
 		.then(({ rowCount }) => {
 			return rowCount;
 		});

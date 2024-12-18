@@ -366,7 +366,7 @@ describe('PATCH /api/articles/:article_id', () => {
 describe('DELETE /api/articles/:article_id/comments/:comment_id', () => {
 	test('204: Comment is deleted based on the input comment_id', () => {
 		return request(app)
-			.delete('/api/articles/:article_id/comments/1')
+			.delete('/api/articles/1/comments/18')
 			.expect(204)
 			.then(({ body }) => {
 				expect(body).toEqual({});
@@ -374,7 +374,7 @@ describe('DELETE /api/articles/:article_id/comments/:comment_id', () => {
 	});
 	test('404: Returns a message advising no comment found if the comment_id does not exist', () => {
 		return request(app)
-			.delete('/api/articles/:article_id/comments/9999')
+			.delete('/api/articles/1/comments/9999')
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toEqual('not found');
