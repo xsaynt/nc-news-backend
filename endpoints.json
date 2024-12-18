@@ -77,7 +77,7 @@
 			"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
 		}
 	},
-	"DELETE /api/comments/:comment_id": {
+	"DELETE /api/articles/:article_id/comments/:comment_id": {
 		"description": "deletes a comment from the database table and returns nothing",
 		"queries": ["comment_id"]
 	},

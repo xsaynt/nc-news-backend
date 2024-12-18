@@ -34,7 +34,7 @@ app.post('/api/articles/:article_id/comments', postNewComment);
 
 app.patch('/api/articles/:article_id', newVoteValue);
 
-app.delete('/api/comments/:comment_id', removedComment);
+app.delete('/api/articles/:article_id/comments/:comment_id', removedComment);
 
 app.get('/api/users', getAllUsers);
 
