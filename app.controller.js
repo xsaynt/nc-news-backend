@@ -80,7 +80,6 @@ exports.newVoteValue = (req, res, next) => {
 
 exports.removedComment = (req, res, next) => {
 	const { article_id, comment_id } = req.params;
-	console.log(`article_id: ${article_id}, comment_id: ${comment_id}`);
 
 	deleteComment(article_id, comment_id)
 		.then((removedRow) => {
