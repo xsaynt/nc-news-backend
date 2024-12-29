@@ -1,23 +1,34 @@
 # Northcoders News API
 
-Hosted API - https://my-nc-news-yn9b.onrender.com
-
 This project is based on a news outlet and includes a database with tables of articles, comments, topics and users and looks to allow a user to locate specified information based on each table with data that links the tables together, such as comments on different articles and such.
 
-In order to clone this repo, use the command 'git clone https://github.com/xsaynt/my-nc-news.git'.
+If you would like to view my hosted API, this can be viewed [here](https://my-nc-news-yn9b.onrender.com)
 
-You will then need to install multiple dependencies in order for the code to run succesfully. In order to install these dependencies, please run 'npm install'.
+## Setup
 
-In order to seed a local database, you must use the command 'npm run seed'. This will populate the database and allow for testing.
+In order to clone this repo, start by opening my repo [here](https://github.com/xsaynt/nc-news-backend) and clicking 'Code' at the top in order to copy the URL. Once done, you can open your terminal and enter the following commands:
 
-To test the database, you must run 'npm run test'.
+`git clone *copied URL*`
 
-If you wish to clone this project and run it locally, you must create two .env files in order to access both the development and test databases. The first file being a .env.test file, and the second being a .env.development file. Once these have been created, you must input the name of the database into the corresponding file in the format of PGDATABASE=database_name_here.
+`code nc-news-backend`
+
+If you wish to run this project locally after cloning, you must create two .env files at the root of the repo in order to access both the development and test databases. The first file being a `.env.test` file, and the second being a `.env.development file`. Once these have been created, you must input the name of the database into the corresponding file in the format of `PGDATABASE=database_name_here`.
+
+You will then need to install multiple dependencies in order for the code to run succesfully. In order to install these dependencies, you must run the command
+
+`npm install`.
+
+In order to populate the database and allow for testing, you will need to run the command:
+
+`npm run seed`
+
+To test the database, you must run the command:
+
+`npm run test`.
+
+## Requirements
 
 For this project to run successfully, tou must also ensure that the correct versions of Node.js and Postgres are installed. The minimum versions required are as follows:
-Node.js - v22.8.0
-Postgres - 8.13.1
 
----
-
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+- Node.js - v22.8.0
+- Postgres - 8.13.1
