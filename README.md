@@ -2,7 +2,7 @@
 
 This project is based on a news outlet and includes a database with tables of articles, comments, topics and users and looks to allow a user to locate specified information based on each table with data that links the tables together, such as comments on different articles and such.
 
-If you would like to view my hosted API, this can be viewed [here](https://my-nc-news-yn9b.onrender.com)
+If you would like to view my hosted API, this can be viewed [here](https://my-nc-news-yn9b.onrender.com/api)
 
 ## Setup
 
