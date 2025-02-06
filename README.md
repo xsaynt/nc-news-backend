@@ -4,6 +4,10 @@ This project is based on a news outlet and includes a database with tables of ar
 
 If you would like to view my hosted API, this can be viewed [here](https://my-nc-news-yn9b.onrender.com/api)
 
+The frontend of the project can be found using the following link: [News Website Frontend](https://github.com/xsaynt/nc-news-frontend).
+
+The hosted site can be found using the following link: [Hosted News Website](https://alexp-nc-news.netlify.app/)
+
 ## Setup
 
 In order to clone this repo, start by opening my repo [here](https://github.com/xsaynt/nc-news-backend) and clicking 'Code' at the top in order to copy the URL. Once done, you can open your terminal and enter the following commands:
